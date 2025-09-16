@@ -168,6 +168,15 @@ export function Footer() {
           />
         </svg>
       </a>
+      <a
+        href="https://github.com/impeterk/hn-hono"
+        target="_blank"
+        rel="nofollow noopener"
+        class="secondary"
+        style={{ float: "right" }}
+      >
+        Github
+      </a>
     </footer>
   );
 }
