@@ -1,16 +1,19 @@
 import { Hono } from "hono";
 import { jsxRenderer, useRequestContext } from "hono/jsx-renderer";
 import { getFeed } from "./lib/hacker-news";
-import { raw } from "hono/html";
-import { ModeSwitcher } from "./components/client/mode-switcher";
 import { getArticleAndSummary } from "./lib/article";
 import { AppEnv } from "./types";
-import { Header } from "./components/header";
 import { Article } from "./components/article";
 import DefaultLayout from "./components/layout";
 import { getCookie } from "hono/cookie";
+import { ErrorBoundary, Suspense } from "hono/jsx";
+import { Summary } from "./components/summary";
 
 const app = new Hono<AppEnv>();
+
+app.get("/api/hello", (c) => {
+  return c.json({ hello: "world" });
+});
 app.use(
   "*",
   jsxRenderer(
@@ -77,11 +80,12 @@ app.get("/:article", async (c) => {
   const { link: rawLink, comments: rawComments } = c.req.query();
   const link = JSON.parse(rawLink);
   const comments = JSON.parse(rawComments);
-  const article = await getArticleAndSummary({
+  const options = {
     ai: c.env.AI,
     articlesKV: c.env.articles,
     url: link,
-  });
+  };
+  const article = await getArticleAndSummary(options);
   return c.render(
     <>
       <title>{article.title} | Hono Hacker News Summarizer</title>
@@ -94,7 +98,15 @@ app.get("/:article", async (c) => {
             <li>{article.title}</li>
           </ul>
         </nav>
-        <Article article={article} link={link} comments={comments} />
+        <Article article={article} link={link} comments={comments}>
+          <ErrorBoundary fallback={<span>Summary not available</span>}>
+            <Suspense
+              fallback={<span aria-busy="true">Generating Summary...</span>}
+            >
+              <Summary article={article.content || ""} options={options} />
+            </Suspense>
+          </ErrorBoundary>
+        </Article>
       </main>
     </>
   );

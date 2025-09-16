@@ -1,15 +1,18 @@
-import { ErrorBoundary } from "hono/jsx";
+import { Child, ErrorBoundary, Suspense } from "hono/jsx";
 import { ArticleSummary } from "../types";
 import { raw } from "hono/html";
+import { Summary } from "./summary";
 
 export function Article({
   article,
   link,
   comments,
+  children,
 }: {
   article: ArticleSummary;
   link: string;
   comments: string;
+  children: Child;
 }) {
   return (
     <article>
@@ -32,9 +35,7 @@ export function Article({
         </nav>
       </header>
       <h2>Summary</h2>
-      <ErrorBoundary fallback={<span>Summary not available</span>}>
-        {article.summary ? raw(article.summary) : <p>Summary not available</p>}
-      </ErrorBoundary>
+      {children}
       <hr />
       <h2>Article</h2>
       {article.content ? raw(article.content) : <p>Article not available</p>}
