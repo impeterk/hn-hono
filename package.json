@@ -1,0 +1,21 @@
+{
+  "name": "hn-hono",
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy --minify",
+    "cf-typegen": "wrangler types --env-interface CloudflareBindings"
+  },
+  "dependencies": {
+    "@extractus/feed-extractor": "^7.1.7",
+    "@mozilla/readability": "^0.6.0",
+    "@picocss/pico": "^2.1.1",
+    "dompurify": "^3.2.6",
+    "hono": "^4.9.7",
+    "linkedom": "^0.18.12"
+  },
+  "devDependencies": {
+    "@types/node": "^24.5.0",
+    "wrangler": "^4.4.0"
+  }
+}
