@@ -4,6 +4,5 @@ export type AppEnv = {
 
 export type ArticleSummary = {
   content: string | null | undefined;
-  summary: string | null | undefined;
   title: string | null | undefined;
 };

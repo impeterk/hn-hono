@@ -9,9 +9,10 @@ export function Header() {
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
+        marginBottom: "1rem",
       }}
     >
-      <h3>Hono Hacker News Summarizer</h3>
+      <h3 style={{ marginBottom: 0 }}>Hono Hacker News Summarizer</h3>
       <ThemeSwitch />
     </header>
   );

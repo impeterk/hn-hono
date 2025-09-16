@@ -27,14 +27,14 @@ async function getAiSummary(
     ai: Ai;
     articlesKV: KVNamespace;
     url: string;
-  }
+  },
 ) {
   let result = await options.articlesKV.get<{ summary: string }>(
-    options.url,
-    "json"
+    `${options.url}-summary`,
+    "json",
   );
-  if (result) {
-    return result;
+  if (result?.summary) {
+    return result.summary;
   }
   try {
     let response = await options.ai.run("@cf/facebook/bart-large-cnn", {
@@ -44,11 +44,11 @@ async function getAiSummary(
     const summary = response.summary;
     await options.articlesKV.put(
       `${options.url}-summary`,
-      JSON.stringify({ summary })
+      JSON.stringify({ summary }),
     );
-    return response;
+    return summary;
   } catch (e) {
     console.log(e);
-    return null;
+    throw new Error("AI service not available");
   }
 }

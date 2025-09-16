@@ -11,9 +11,6 @@ import { Summary } from "./components/summary";
 
 const app = new Hono<AppEnv>();
 
-app.get("/api/hello", (c) => {
-  return c.json({ hello: "world" });
-});
 app.use(
   "*",
   jsxRenderer(
@@ -22,8 +19,8 @@ app.use(
       const theme = getCookie(c, "theme") || null;
       return <DefaultLayout theme={theme}>{children}</DefaultLayout>;
     },
-    { stream: true }
-  )
+    { stream: true },
+  ),
 );
 
 app.get("/", async (c) => {
@@ -40,7 +37,7 @@ app.get("/", async (c) => {
         {entries?.map((entry) => (
           <a
             href={`/${entry.id}?link=${JSON.stringify(
-              entry.link
+              entry.link,
             )}&comments=${JSON.stringify(entry.comments)}`}
           >
             <article>
@@ -72,7 +69,7 @@ app.get("/", async (c) => {
           </a>
         ))}
       </main>
-    </>
+    </>,
   );
 });
 
@@ -108,7 +105,7 @@ app.get("/:article", async (c) => {
           </ErrorBoundary>
         </Article>
       </main>
-    </>
+    </>,
   );
 });
 

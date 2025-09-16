@@ -9,7 +9,7 @@ export async function getArticleAndSummary(options: {
 }) {
   let result = await options.articlesKV.get<ArticleSummary>(
     options.url,
-    "json"
+    "json",
   );
   if (result) {
     return result;
@@ -17,7 +17,6 @@ export async function getArticleAndSummary(options: {
 
   result = {
     content: null,
-    summary: null,
     title: null,
   };
   const response = await fetch(options.url, {
@@ -29,7 +28,7 @@ export async function getArticleAndSummary(options: {
   const html = await response.text();
   const { document } = parseHTML(html);
   [...document.getElementsByTagName("img")].forEach(
-    (img) => (img.src = new URL(img.src, options.url).href)
+    (img) => (img.src = new URL(img.src, options.url).href),
   );
   [...document.getElementsByTagName("a")].forEach((a) => {
     a.href = new URL(a.href, options.url).href;
@@ -50,18 +49,8 @@ export async function getArticleAndSummary(options: {
     const { window } = parseHTML("");
     const purify = DOMPurify(window);
     const cleanContent = purify.sanitize(article.content);
-    let response = null;
-    try {
-      response = await options.ai.run("@cf/facebook/bart-large-cnn", {
-        input_text: cleanContent,
-        max_length: 2000,
-      });
-    } catch (e) {
-      console.log(e);
-    }
     result = {
       content: cleanContent,
-      summary: response?.summary || article.excerpt,
       title: article.title,
     };
   }
